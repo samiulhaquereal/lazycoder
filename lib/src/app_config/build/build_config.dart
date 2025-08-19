@@ -13,19 +13,21 @@ abstract class AppEnvironment {
   static void setupEnv(Environment env) {
     _environment = env;
     switch (env) {
-      case Environment.DEVELOPMENT:
+      case Environment.development:
         {
+          const base = String.fromEnvironment('BASE_URL');
           title = '${AppStrings.appName} - Dev';
           debugBanner = true;
-          baseUrl = '${dotenv.env['DEVELOPMENT_API_BASE_URL']}';
+          baseUrl = base;
           statusBarColor = AppColors.backgroundColor;
           statusBarIconColor = Brightness.dark;
           break;
         }
-      case Environment.PRODUCTION: {
+      case Environment.production: {
+        const base = String.fromEnvironment('BASE_URL');
         title = AppStrings.appName;
         debugBanner = false;
-        baseUrl = '${dotenv.env['PRODUCTION_API_BASE_URL']}';
+        baseUrl = base;
         statusBarColor = AppColors.backgroundColor;
         statusBarIconColor = Brightness.dark;
         break;

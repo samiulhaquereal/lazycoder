@@ -22,73 +22,69 @@ class RestApi {
     return dio;
   }
 
-  Map<String, String> _buildHeaders({Map<String, String>? additionalHeaders, String? cookies}) {
+  Map<String, String> _buildHeaders({Map<String, String>? additionalHeaders}) {
     final headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       if (additionalHeaders != null) ...additionalHeaders,
     };
-    if (cookies != null && cookies.isNotEmpty) {
-      headers.addAll({'Cookie': cookies});
+    final storedCookie = ApiResponseHandler().cookie;
+    if (storedCookie.isNotEmpty) {
+      headers.addAll({'Cookie': storedCookie});
     }
     return headers;
   }
 
-  Future<dynamic> get({required String baseURL,required String endpoint, Map<String, String>? params, String? cookies, Map<String, String>? additionalHeaders, bool? needEncode}) async {
+  Future<dynamic> get({required String baseURL,required String endpoint, Map<String, String>? params, Map<String, String>? additionalHeaders, bool? needEncode}) async {
     return _sendRequest(
-      method: AppStrings.GET,
-      baseURL: baseURL,
-      endpoint: endpoint,
-      params: params,
-      setCookies: cookies,
-      needEncode: needEncode,
-      additionalHeaders: additionalHeaders
+        method: AppStrings.GET,
+        baseURL: baseURL,
+        endpoint: endpoint,
+        params: params,
+        needEncode: needEncode,
+        additionalHeaders: additionalHeaders
     );
   }
 
-  Future<dynamic> post({required String baseURL,required String endpoint, dynamic body, String? cookies, Map<String, String>? additionalHeaders, bool? needEncode}) async {
+  Future<dynamic> post({required String baseURL,required String endpoint, dynamic body, Map<String, String>? additionalHeaders, bool? needEncode}) async {
     return _sendRequest(
       method: AppStrings.POST,
       baseURL: baseURL,
       endpoint: endpoint,
       body: body,
-      setCookies: cookies,
       additionalHeaders: additionalHeaders,
       needEncode: needEncode,
     );
   }
 
-  Future<dynamic> put({required String baseURL,required String endpoint, dynamic body, String? cookies, Map<String, String>? additionalHeaders, bool? needEncode}) async {
+  Future<dynamic> put({required String baseURL,required String endpoint, dynamic body, Map<String, String>? additionalHeaders, bool? needEncode}) async {
     return _sendRequest(
-      method: AppStrings.PUT,
-      baseURL: baseURL,
-      endpoint: endpoint,
-      body: body,
-      setCookies: cookies,
-      needEncode: needEncode,
-      additionalHeaders: additionalHeaders
+        method: AppStrings.PUT,
+        baseURL: baseURL,
+        endpoint: endpoint,
+        body: body,
+        needEncode: needEncode,
+        additionalHeaders: additionalHeaders
     );
   }
 
-  Future<dynamic> patch({required String baseURL,required String endpoint, dynamic body, String? cookies, Map<String, String>? additionalHeaders, bool? needEncode}) async {
+  Future<dynamic> patch({required String baseURL,required String endpoint, dynamic body, Map<String, String>? additionalHeaders, bool? needEncode}) async {
     return _sendRequest(
-      method: AppStrings.PATCH,
-      baseURL: baseURL,
-      endpoint: endpoint,
-      body: body,
-      needEncode: needEncode,
-      setCookies: cookies,
-      additionalHeaders: additionalHeaders
+        method: AppStrings.PATCH,
+        baseURL: baseURL,
+        endpoint: endpoint,
+        body: body,
+        needEncode: needEncode,
+        additionalHeaders: additionalHeaders
     );
   }
 
-  Future<dynamic> delete({required String baseURL,required String endpoint, dynamic body, String? cookies, Map<String, String>? params, Map<String, String>? additionalHeaders}) async {
+  Future<dynamic> delete({required String baseURL,required String endpoint, dynamic body, Map<String, String>? params, Map<String, String>? additionalHeaders}) async {
     return _sendRequest(
-      method: AppStrings.DELETE,
-      baseURL: baseURL,
-      endpoint: endpoint,
-      params: params,
-      setCookies: cookies,
-      additionalHeaders: additionalHeaders
+        method: AppStrings.DELETE,
+        endpoint: endpoint,
+        params: params,
+        baseURL: baseURL,
+        additionalHeaders: additionalHeaders
     );
   }
 
@@ -97,22 +93,20 @@ class RestApi {
     required String baseURL,
     bool? needEncode,
     required String endpoint,
-    dynamic? body,
+    dynamic body,
     Map<String, String>? params,
-    String? setCookies,
     Map<String, String>? additionalHeaders
   }) async {
-    String os = '';//RetCore.getOS();
+    String os = PlatformUtils.getCurrentOS();
     if (os == 'Web') {
       return _sendRequestHandler(
-        method: method,
-        baseURL: baseURL,
-        needEncode: needEncode,
-        endpoint: endpoint,
-        body: body,
-        params: params,
-        setCookies: setCookies,
-        additionalHeaders: additionalHeaders
+          method: method,
+          baseURL: baseURL,
+          needEncode: needEncode,
+          endpoint: endpoint,
+          body: body,
+          params: params,
+          additionalHeaders: additionalHeaders
       );
     } else {
       final receivePort = ReceivePort();
@@ -124,7 +118,6 @@ class RestApi {
         'endpoint': endpoint,
         'body': body,
         'params': params,
-        'setCookies': setCookies,
         'additionalHeaders': additionalHeaders,
       });
       final response = await receivePort.first;
@@ -140,18 +133,16 @@ class RestApi {
     final endpoint = params['endpoint'];
     final body = params['body'];
     final queryParams = params['params'];
-    final setCookies = params['setCookies'];
     final additionalHeaders = params['additionalHeaders'];
 
     final response = await _sendRequestHandler(
-      method: method,
-      baseURL: baseURL,
-      needEncode: needEncode,
-      endpoint: endpoint,
-      body: body,
-      params: queryParams,
-      setCookies: setCookies,
-      additionalHeaders: additionalHeaders
+        method: method,
+        baseURL: baseURL,
+        needEncode: needEncode,
+        endpoint: endpoint,
+        body: body,
+        params: queryParams,
+        additionalHeaders: additionalHeaders
     );
     sendPort.send(response);
   }
@@ -161,41 +152,45 @@ class RestApi {
     required String baseURL,
     bool? needEncode,
     required String endpoint,
-    dynamic? body,
+    dynamic body,
     Map<String, String>? params,
     SendPort? sendPort,
-    String? setCookies,
     Map<String, String>? additionalHeaders
   }) async {
     try {
       dio_client.Response response;
       final dio = _createDioInstance(baseURL);
       final uri = Uri.parse('$baseURL$endpoint');
-      final requestHeaders = _buildHeaders(cookies: setCookies, additionalHeaders: additionalHeaders);
+      final requestHeaders = _buildHeaders(additionalHeaders: additionalHeaders);
       final requestBody = needEncode == true ? jsonEncode(body) : body;
 
       switch (method) {
         case AppStrings.GET:
-          response = await dio.get(uri.toString(), queryParameters: params, options: dio_client.Options(headers: requestHeaders));
+          response = await dio.get(uri.toString(), queryParameters: params, options: dio_client.Options(headers: requestHeaders))
+              .then((value) => value);
           break;
         case AppStrings.POST:
-          response = await dio.post(uri.toString(), data: requestBody, options: dio_client.Options(headers: requestHeaders));
+          response = await dio.post(uri.toString(), data: requestBody, options: dio_client.Options(headers: requestHeaders))
+              .then((value) => value);
           break;
         case AppStrings.PUT:
-          response = await dio.put(uri.toString(), data: requestBody, options: dio_client.Options(headers: requestHeaders));
+          response = await dio.put(uri.toString(), data: requestBody, options: dio_client.Options(headers: requestHeaders))
+              .then((value) => value);
           break;
         case AppStrings.PATCH:
-          response = await dio.patch(uri.toString(), data: requestBody, options: dio_client.Options(headers: requestHeaders));
+          response = await dio.patch(uri.toString(), data: requestBody, options: dio_client.Options(headers: requestHeaders))
+              .then((value) => value);
           break;
         case AppStrings.DELETE:
-          response = await dio.delete(uri.toString(), data: requestBody, options:dio_client.Options(headers: requestHeaders));
+          response = await dio.delete(uri.toString(), data: requestBody, options:dio_client.Options(headers: requestHeaders))
+              .then((value) => value);
           break;
         default:
           throw Exception('Unsupported HTTP method: $method');
       }
 
-      String cookieResponse = ApiResponseHandler().cookieSet(response: response);
       var handleResponse = ApiResponseHandler().handleResponse(response: response, sendPort: sendPort);
+      String cookieResponse = ApiResponseHandler().cookie;
       Map<String, dynamic> data = {
         "records": handleResponse,
         "cookie": cookieResponse,
