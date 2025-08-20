@@ -9,6 +9,16 @@ class DashboardScreen extends BaseView<DashboardController> {
   }
 
   @override
+  Color pageBackgroundColor() {
+    return AppColors.backgroundColor;
+  }
+
+  @override
+  Future<bool> onWillPop() async {
+    return controller.showAppExitModal();
+  }
+
+  @override
   Widget body(BuildContext context) {
     return Column();
   }

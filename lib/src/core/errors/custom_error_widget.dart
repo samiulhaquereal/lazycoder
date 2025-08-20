@@ -1,9 +1,9 @@
 import 'package:lazycoder/src/app_config/imports/import.dart';
 
-class CustomErrorWidget extends StatelessWidget with StyleMixin,ShorterEnumMixin {
+class CustomErrorMessageWidget extends StatelessWidget with StyleMixin,ShorterEnumMixin {
   final String errorMessage;
 
-  CustomErrorWidget({super.key, required this.errorMessage});
+  CustomErrorMessageWidget({super.key, required this.errorMessage});
 
   @override
   Widget build(BuildContext context) {

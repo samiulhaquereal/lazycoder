@@ -14,7 +14,7 @@ void main()async{
   ]);
   ErrorWidget.builder = (FlutterErrorDetails details)=>SafeArea(child: Scaffold(
     appBar: CustomAppBar(appBarTitleText: AppEnvironment.title),
-    body: CustomErrorWidget(errorMessage: AppEnvironment.environment == Environment.development
+    body: CustomErrorMessageWidget(errorMessage: AppEnvironment.environment == Environment.development
         ? details.exceptionAsString()
         : 'Something went wrong'),
   ));

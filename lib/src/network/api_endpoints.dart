@@ -6,7 +6,7 @@ class ApiConstants {
 
   static const endpointSearch = String.fromEnvironment('ENDPOINT_SEARCH');
 
-  static String search({required String name}){
-    return '$endpointSearch$name';
+  static String search({required String name,required int page,required int perPage}){
+    return '$endpointSearch?q=$name&page=$page&per_page=$perPage&sort=stars&order=desc';
   }
 }

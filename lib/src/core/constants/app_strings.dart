@@ -12,6 +12,9 @@ class AppStrings {
   static const String cancelButton = 'Cancel';
   static const String back = 'Back';
 
+  static const String exit = 'Exit';
+  static const String exitMessage = 'Do you want to exit?';
+
   // Error Messages
   static const String loginError = 'Invalid username or password.';
   static const String networkError = 'Please check your internet connection.';

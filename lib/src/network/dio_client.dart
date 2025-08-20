@@ -15,7 +15,8 @@ class RestApi {
       ..options.baseUrl = baseUrl
       ..options.connectTimeout = const Duration(minutes: 5)
       ..options.receiveTimeout = const Duration(minutes: 5)
-      ..options.responseType = dio_client.ResponseType.json;
+      ..options.responseType = dio_client.ResponseType.json
+      ..interceptors.add(ErrorInterceptors());
     if (kDebugMode) {
       dio.interceptors.add(PrettyDioLogger());
     }
