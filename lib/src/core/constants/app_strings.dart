@@ -27,4 +27,6 @@ class AppStrings {
   static const String PUT = 'PUT';
   static const String PATCH = 'PATCH';
   static const String DELETE = 'DELETE';
+
+  static const String repositories = "Repositories";
 }

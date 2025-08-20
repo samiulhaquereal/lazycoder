@@ -42,6 +42,7 @@ export 'package:lazycoder/src/core/widgets/custom_app_bar.dart';
 export 'package:lazycoder/src/bindings/initial_binding.dart';
 export 'package:lazycoder/src/model/repositories_list_model_model.dart';
 export 'package:lazycoder/src/core/errors/custom_error_widget.dart';
+export 'package:lazycoder/src/features/main_modules/dashboard/screen/widget/build_repositories_list_widget.dart';
 export 'package:gap/gap.dart';
 export 'package:line_awesome_flutter/line_awesome_flutter.dart';
 export 'package:simple_animations/simple_animations.dart';
