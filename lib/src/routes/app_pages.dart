@@ -34,6 +34,12 @@ class AppPages {
         bindings:[
           DashboardBinding()
         ]
-    )
+    ),
+    GetPage(
+        name: Routes.getRepositoriesDetailsRoute(),
+        page: ()=> RepositoriesDetailsScreen(),
+        binding: RepositoriesDetailsBinding(),
+        transition: Transition.native
+    ),
   ];
 }

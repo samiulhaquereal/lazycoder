@@ -20,7 +20,7 @@ abstract class AppEnvironment {
           debugBanner = true;
           baseUrl = base;
           statusBarColor = AppColors.backgroundColor;
-          statusBarIconColor = Brightness.dark;
+          statusBarIconColor = Brightness.light;
           break;
         }
       case Environment.production: {
@@ -29,7 +29,7 @@ abstract class AppEnvironment {
         debugBanner = false;
         baseUrl = base;
         statusBarColor = AppColors.backgroundColor;
-        statusBarIconColor = Brightness.dark;
+        statusBarIconColor = Brightness.light;
         break;
       }
     }

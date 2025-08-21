@@ -7,11 +7,7 @@ abstract class BaseController extends GetxController {
   GetStorage get storage => GetStorage();
   AppLogger get console => AppLogger();
 
-  void _navigateToScreen(Widget Function() screen) {
-    Future.delayed(
-      Duration.zero, () => Get.to(screen, opaque: false, fullscreenDialog: true),
-    );
-  }
+  RxBool ignore = false.obs;
 
   Future<void> showLoader() async {
     Future.delayed(
@@ -28,8 +24,7 @@ abstract class BaseController extends GetxController {
 
    Future<void> dataFetcher(
       Future<void> Function() fetchDataFunction, {
-        bool shouldShowLoader = true,
-        String? status,
+        bool shouldShowLoader = true
       }) async {
       if (shouldShowLoader) {
         await showLoader();

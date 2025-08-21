@@ -2,11 +2,9 @@ import 'package:lazycoder/src/app_config/imports/import.dart';
 
 class DashboardController extends BaseController{
 
-  RxBool ignore = false.obs;
   var isLoadingMore = false.obs;
   RxInt currentPage = 1.obs;
   Rx<RepositoriesListModel?> repositoriesList = Rx<RepositoriesListModel?>(null);
-  RxList<String> posterPaths = <String>[].obs;
 
   @override
   void onInit() {
@@ -21,21 +19,44 @@ class DashboardController extends BaseController{
         currentPage.value++;
       } else {
         currentPage.value = 1;
+
+        if (repositoriesList.value != null) {
+          return;
+        }
+
+        final cached = storage.read('repositoriesList');
+        if (cached != null) {
+          repositoriesList.value = repositoriesListModelFromJson(cached);
+          return;
+        }
+
         repositoriesList.value = RepositoriesListModel();
       }
 
-      Map<String, dynamic>? response = await apiServices.getSearch(name: 'Flutter', page: 1, perPage: 1);
-      if (response?['records'] != null && response?['records']['Response'] == 'True'){
+      final page = currentPage.value;
+      Map<String, dynamic>? response = await apiServices.getSearch(name: 'Flutter', page: page, perPage: 10);
+      if (response?['records'] != null){
         final jsonString = jsonEncode(response?['records']);
-        repositoriesList.value = repositoriesListModelFromJson(jsonString);
-        /*posterPaths.value = repositoriesList.value?.items
-            ?.map((e) => e.poster ?? '')
-            .where((url) => url.isNotEmpty)
-            .toList() ?? [];*/
-        console.log( repositoriesList.value);
+        final newData = repositoriesListModelFromJson(jsonString);
+
+        if (loadMore) {
+          final currentItems = repositoriesList.value?.items ?? [];
+          final updatedItems = [...currentItems, ...?newData.items];
+
+          repositoriesList.value = RepositoriesListModel(
+            totalCount: newData.totalCount,
+            incompleteResults: newData.incompleteResults,
+            items: updatedItems,
+          );
+        } else {
+          repositoriesList.value = newData;
+          await storage.write('repositoriesList', jsonString);
+        }
       }
     } catch (e) {
       console.log('Error fetching List: $e');
+    }finally {
+      isLoadingMore.value = false;
     }
   }
 
@@ -49,8 +70,8 @@ class DashboardController extends BaseController{
     return shouldPop;
   }
 
-  void onTapItem() {
-    //Get.toNamed(Routes.getMovieDetailsRoute());
+  void onTapItem(Item repo) {
+    Get.toNamed(Routes.getRepositoriesDetailsRoute(),arguments: repo);
   }
 
 }

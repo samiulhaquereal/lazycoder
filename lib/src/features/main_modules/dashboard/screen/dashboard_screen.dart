@@ -20,23 +20,24 @@ class DashboardScreen extends BaseView<DashboardController> {
 
   @override
   Widget body(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-          child: Text(
-            AppStrings.repositories,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.whiteColor,
+    return Obx(()=> Column(
+      mainAxisAlignment: controller.ignore.isFalse ? startMAA : startMAA,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            child: Text(
+              AppStrings.repositories,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.whiteColor,
+              ),
             ),
           ),
-        ),
-        RetCore.space(10.h),
-        buildRepositoriesList(controller),
-      ],
+          RetCore.space(10.h),
+          buildRepositoriesList(controller),
+        ],
+      ),
     );
   }
-
 }

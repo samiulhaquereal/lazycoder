@@ -6,20 +6,17 @@ class SplashScreen extends BaseWidget<SplashController> {
   @override
   Widget body(BuildContext context) {
     return Container(
-      height: Get.height,
-      width: Get.width,
+      height: Get.height.h,
+      width: Get.width.w,
       alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        // image: DecorationImage(
-        //   image: AssetImage(backgroundImage),
-        //   fit: BoxFit.cover,
-        // ),
+      decoration: BoxDecoration(
+          color: AppColors.backgroundColor
       ),
       child: Column(
         mainAxisAlignment: centerMAA,
         children: [
-          _buildSplashAnimation(),
-          Gap(7.h),
+          buildSplashAnimation(),
+          RetCore.space(7.h),
           Text(
               AppStrings.appName,
               style: splashScreenTextStyle
@@ -27,16 +24,5 @@ class SplashScreen extends BaseWidget<SplashController> {
         ],
       ),
     );
-  }
-
-  Widget _buildSplashAnimation() {
-    return SplashAnimation(
-          end: 70.w,
-          seconds: 2,
-          widget: AssetImageView(
-            fileName: '',
-            width: 70.w,
-          )
-        );
   }
 }

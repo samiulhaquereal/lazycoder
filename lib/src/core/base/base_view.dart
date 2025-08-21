@@ -3,6 +3,8 @@ import 'package:lazycoder/src/app_config/imports/import.dart';
 abstract class BaseView<Controller extends BaseController> extends GetView<Controller> with ValidatorMixin, ShorterEnumMixin, StyleMixin {
   BaseView({super.key});
 
+  final GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -15,17 +17,20 @@ abstract class BaseView<Controller extends BaseController> extends GetView<Contr
 
 
   Widget pageScaffold(BuildContext context) {
-    return Scaffold(
-      backgroundColor: pageBackgroundColor(),
-      key: scaffoldKey,
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset(),
-      appBar: appBar(context),
-      floatingActionButton: floatingActionButton(),
-      body: pageContent(context),
-      bottomNavigationBar: bottomNavigationBar(),
-      endDrawer: drawer(context),
-      extendBodyBehindAppBar: extendBodyBehindAppBar(),
-      floatingActionButtonLocation: floatingActionButtonLocation(),
+    return DefaultTabController(
+      length: tabCount(),
+      child: Scaffold(
+        backgroundColor: pageBackgroundColor(),
+        key: globalKey,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset(),
+        appBar: appBar(context),
+        floatingActionButton: floatingActionButton(),
+        body: pageContent(context),
+        bottomNavigationBar: bottomNavigationBar(),
+        endDrawer: drawer(context),
+        extendBodyBehindAppBar: extendBodyBehindAppBar(),
+        floatingActionButtonLocation: floatingActionButtonLocation(),
+      ),
     );
   }
 

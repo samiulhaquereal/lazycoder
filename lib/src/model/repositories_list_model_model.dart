@@ -108,7 +108,7 @@ class Item {
   int? openIssues;
   int? watchers;
   String? defaultBranch;
-  int? score;
+  double? score;
 
   Item({
     this.id,
@@ -273,7 +273,7 @@ class Item {
     openIssues: json["open_issues"],
     watchers: json["watchers"],
     defaultBranch: json["default_branch"],
-    score: json["score"],
+    score: (json["score"] as num?)?.toDouble(),
   );
 
   Map<String, dynamic> toJson() => {

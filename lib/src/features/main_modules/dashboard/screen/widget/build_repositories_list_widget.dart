@@ -13,24 +13,28 @@ Widget buildRepositoriesList(DashboardController controller) {
   });
 
   return Obx(() {
-    return SizedBox(
-      height: MediaQuery.of(controller.buildContext!).size.height * 0.3,
+    final items = controller.repositoriesList.value?.items ?? [];
+    return Expanded(
       child: ListView.separated(
+        separatorBuilder: (_, __) => SizedBox(height: 12.h),
         controller: scrollController,
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        itemCount: controller.latestMoviePosterPaths.length + (controller.isLoadingMore.value ? 1 : 0),
-        separatorBuilder: (_, __) => SizedBox(width: 12.w),
+        scrollDirection: Axis.vertical,
+        physics: ClampingScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+        itemCount: items.length + (controller.isLoadingMore.value ? 1 : 0),
         itemBuilder: (context, index) {
-          if (index < controller.latestMoviePosterPaths.length) {
-            return buildLatestMovieListItem(
-              controller,
-              controller.latestMoviePosterPaths,
-              index,
-            );
+          if (index < items.length) {
+            final repo = items[index];
+            return InkWell(
+                onTap: ()=> controller.onTapItem(repo),
+                child: buildRepositoryListItem(repo));
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.h,horizontal: 16.w),
+                child: CircularProgressIndicator(color: AppColors.whiteColor),
+              ),
             );
           }
         },

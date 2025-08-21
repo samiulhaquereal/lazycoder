@@ -5,6 +5,7 @@ abstract class Paths {
   static const String _loadingScreenPage = "/loading";
   static const String _loginPage = "/loginPage";
   static const String _dashboardPage = "/dashboardPage";
+  static const String _repositoriesDetailsPage = "/repositoriesDetailsPage";
 }
 
 abstract class Routes{
@@ -14,4 +15,5 @@ abstract class Routes{
   static String getPageNotFoundRoute ()=> Paths._notFoundScreenPage;
   static String getLoginRoute ()=> Paths._loginPage;
   static String getDashboardRoute()=> Paths._dashboardPage;
+  static String getRepositoriesDetailsRoute()=> Paths._repositoriesDetailsPage;
 }

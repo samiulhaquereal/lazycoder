@@ -6,7 +6,7 @@ class SplashController extends BaseController{
   void onInit() async{
     super.onInit();
     await Future.delayed(const Duration(seconds: 2));
-    Get.offNamed(Routes.getLoginRoute());
+    Get.offNamed(Routes.getDashboardRoute());
   }
 
   @override
